@@ -1,4 +1,4 @@
-package com.example.seller_two;
+package com.example.seller;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
