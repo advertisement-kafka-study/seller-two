@@ -1,6 +1,5 @@
 package com.example.seller;
 
-import com.example.advertisement.Advertisement;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
@@ -44,7 +43,7 @@ public class MainVerticle extends AbstractVerticle {
 
         vertx.setPeriodic(1000L, value -> {
           Advertisement advertisement = new Advertisement();
-          advertisement.setId((long) counter.getAndIncrement());
+          advertisement.setId(String.valueOf(counter.getAndIncrement()));
           advertisement.setName(applicationName);
 
           kafkaTemplate.send(KafkaProducerRecord.create(topic, applicationName, advertisement),
@@ -75,11 +74,6 @@ public class MainVerticle extends AbstractVerticle {
     config.put("bootstrap.servers", properties.getString("kafka.bootstrap-servers"));
     config.put("key.serializer", properties.getString("kafka.producer.key-serializer"));
     config.put("value.serializer", properties.getString("kafka.producer.value-serializer"));
-    config.put("schema.registry.url", properties.getString("kafka.properties.schema.registry.url"));
-    config.put("specific.avro.reader",
-      properties.getBoolean("kafka.properties.specific.avro.reader").toString());
-    config.put("auto.register.schemas",
-      properties.getBoolean("kafka.properties.auto.register.schemas").toString());
     config.put("acks", "1");
 
     return KafkaProducer.create(vertx, config);
