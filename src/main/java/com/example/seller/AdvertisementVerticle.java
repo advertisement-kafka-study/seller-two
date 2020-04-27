@@ -15,7 +15,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class AdvertisementVerticle extends AbstractVerticle {
 
@@ -23,7 +22,6 @@ public class AdvertisementVerticle extends AbstractVerticle {
 
   public static final String EVENT_BUS = "advertisement";
 
-  private final AtomicInteger counter = new AtomicInteger(1);
 
   private final JsonObject properties;
 
@@ -38,8 +36,10 @@ public class AdvertisementVerticle extends AbstractVerticle {
     KafkaProducer<String, String> kafkaTemplate = getKafkaProducer();
 
     vertx.eventBus().consumer(EVENT_BUS, event -> {
+      Opportunity opportunity = Json.decodeValue(event.body().toString(), Opportunity.class);
+
       Advertisement advertisement = new Advertisement();
-      advertisement.setId(String.valueOf(counter.getAndIncrement()));
+      advertisement.setId(opportunity.getId());
       advertisement.setName(applicationName);
 
       CloudEventImpl<Advertisement> cloudEvent = CloudEventBuilder.<Advertisement>builder()
