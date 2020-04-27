@@ -40,7 +40,8 @@ public class AdvertisementVerticle extends AbstractVerticle {
 
       Advertisement advertisement = new Advertisement();
       advertisement.setId(opportunity.getId());
-      advertisement.setName(applicationName);
+      advertisement.setContent(applicationName);
+      advertisement.setCallback(opportunity.getOpportunityRequest().getCallbackData().getUrl());
 
       CloudEventImpl<Advertisement> cloudEvent = CloudEventBuilder.<Advertisement>builder()
         .withId(UUID.randomUUID().toString())
